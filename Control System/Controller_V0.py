@@ -36,7 +36,8 @@ def connect(HOST = '192.168.1.4', PORT = 10000):
    
     s.connect((HOST, PORT))
     print('has connected')
-    return s
+    conn, addr = s.accept()
+    return conn, s
 
 # fetch the angles from the decoders connected to the PC and return them in the [big,small] format
 # the information from the four small encoders should be converted into a single angle so that the format is consistent with the simulation
