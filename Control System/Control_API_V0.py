@@ -7,9 +7,15 @@ This file should:
 NOTE: WHEN WRITING THIS PROGRAM PLEASE RE-UPLOAD TO THE GITHUB AS Control_API_V1.py and increment as needed
 """
 
-import socket
+import socket, pickle
 from naoqi import ALProxy
 
+while True:
+    data = get_encoder_data(conn)
+    print (data)
+    if data == 'close':
+        break
+close(conn, s)
 
 # main loop - should'nt need to be changed much
 def main(PORT_NUMBER = 10000,NAO_IP = "192.168.1.3"):
@@ -21,7 +27,7 @@ def main(PORT_NUMBER = 10000,NAO_IP = "192.168.1.3"):
     action = get_action(TCP_connection)
     move_NAO(action)
     NAO_info = get_NAO_info(NAO_connection)
-    send(NAO_info)
+    send(NAO_info, s)
     
     
 # -------------------------------------------------------- NAO stuff:  
@@ -42,18 +48,32 @@ def get_NAO_info(NAO_connection):
 # -------------------------------------------------------- Client - server stuff
 
 # initialise the connection between the client and the server using the port number
-def TCP_connect(PORT_NUMBER):
-  return None
+def TCP_connect(HOST, PORT_NUMBER):
+  print ('Waiting for client connection...')
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+   
+  s.bind((HOST, PORT))
+   
+  s.listen()
+  print('before')
+  conn, addr = s.accept()
+  return conn, s
+  
 
 # recieve the action info from the controller.py instance running on the lab PC and return this info in the:
 # [hip_angle,hip_angle_speed,knee_angle,knee_angle_speed] format
 def get_action(TCP_connection):
-  
+  TCP_connection.sendall(pickle.dumps('Please send data'))    
+  data = pickle.loads(TCP_connection.recv(4096))
+  return data
   return [hip_angle,hip_angle_speed,knee_angle,knee_angle_speed]
 
 
 # send the NAO_info array in [hip_angle, knee_angle] format to the lab PC
-def send(NAO_info):
+def send(NAO_info, s):
+  data = pickle.dumps(get_NAO_info, protocol=0, fix_imports=True)
+  s.sendall(data)
   pass
 
   
