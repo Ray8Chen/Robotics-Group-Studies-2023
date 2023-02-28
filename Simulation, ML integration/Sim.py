@@ -149,7 +149,7 @@ def setup_simulation():
     centres = {
         "rc": (setup["bg"][0], setup["bg"][1] + setup["rl"] / 2),
         "sc": (setup["bg"][0], setup["bg"][1] + setup["rl"] + setup["sl2"] / 2),
-        "lc": (setup["bg"][0] + setup["sl3"] / 2, setup["bg"][1] + setup["rl"] + setup["sl2"] + setup["ll1"] / 2),
+        "lc": (setup["bg"][0] + setup["sl4"][1], setup["bg"][1] + setup["rl"] + setup["sl2"] - setup["sl4"][0] / 2 + setup["ll1"] / 2),
         "tc": (setup["bg"][0] - setup["sl3"] / 2, setup["bg"][1] + setup["rl"] + setup["sl2"] - setup["tl"] / 2 -0.25),
         
         "hip": (setup["bg"][0] , setup["bg"][1] + setup["rl"] + setup["sl2"] - setup["sl4"][0] /2),
@@ -177,7 +177,7 @@ def setup_simulation():
     joints = {
         "back": Pinjoint(bodies["swing"].body, bodies["torso"].body, (0 , setup["sl2"] / 2 - setup["sl4"][0] /2),
                              (0, setup["tl"] / 2), pm_space),
-        "front": Pinjoint(bodies["swing"].body, bodies["leg"].body, (setup["sl3"] / 2 - 0.5, setup["sl2"] / 2),
+        "front": Pinjoint(bodies["swing"].body, bodies["leg"].body, (setup["sl4"][1], (setup["sl2"] - setup["sl4"][0]) / 2 ),
                               (0, -setup["ll1"] / 2), pm_space),
         "bottom": Pinjoint(bodies["rod"].body, bodies["swing"].body, (0, setup["rl"] / 2), (0, -setup["sl2"] / 2),
                                pm_space),
